@@ -1,5 +1,5 @@
 import { ApiServiceMock, RepoConnectorMock } from "./services";
-import { ServicesContainer, tokens } from "./servicesContainer";
+import { ServicesContainer, containerTokens } from "./servicesContainer";
 
 describe("Dependency injection tests", () => {
   it("Makes a simple object", () => {
@@ -7,7 +7,7 @@ describe("Dependency injection tests", () => {
     const container = new ServicesContainer();
 
     // run
-    const serv = container.get(tokens.apiService);
+    const serv = container.get(containerTokens.apiService);
     const res = serv.get();
 
     // expect
@@ -20,7 +20,7 @@ describe("Dependency injection tests", () => {
     const container = new ServicesContainer();
 
     // run
-    const serv = container.get(tokens.repoConnector);
+    const serv = container.get(containerTokens.repoConnector);
     const res = serv.getData();
 
     // assert

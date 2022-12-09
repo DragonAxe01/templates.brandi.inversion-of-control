@@ -1,20 +1,22 @@
 import { Container, injected, token } from "brandi";
 import { ApiServiceMock, Logger, RepoConnectorMock } from "./services";
 
-export const tokens = {
-  apiService: token<ApiServiceMock>("apiService"),
+export const containerTokens = {
+  apiService: token<ApiServiceMock>("apiService"), // the string is a unique id, no need to match it with code
   logger: token<Logger>("logger"),
-  repoConnector: token<RepoConnectorMock>("repoConnectorMock"),
+  repoConnector: token<RepoConnectorMock>("repoConnector"),
 };
 
-injected(RepoConnectorMock, tokens.logger);
+injected(RepoConnectorMock, containerTokens.logger);
 
 export class ServicesContainer extends Container {
   constructor() {
     super();
-    this.bind(tokens.apiService).toInstance(ApiServiceMock).inSingletonScope();
-    this.bind(tokens.logger).toInstance(Logger).inSingletonScope();
-    this.bind(tokens.repoConnector)
+    this.bind(containerTokens.apiService)
+      .toInstance(ApiServiceMock)
+      .inSingletonScope();
+    this.bind(containerTokens.logger).toInstance(Logger).inSingletonScope();
+    this.bind(containerTokens.repoConnector)
       .toInstance(RepoConnectorMock)
       .inSingletonScope();
   }
