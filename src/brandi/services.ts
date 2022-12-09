@@ -26,3 +26,26 @@ export class RepoConnectorMock {
     return "hello from mock repo";
   };
 }
+
+export interface IMyService {
+  connString: string;
+  getSomething: () => number;
+}
+
+export class MyServiceMock implements IMyService {
+  constructor(public connString: string, private _logger: Logger) {}
+
+  public getSomething = () => {
+    this._logger.log("MyServiceMock running...");
+    return 11;
+  };
+}
+
+export class MyServiceProd implements IMyService {
+  constructor(public connString: string, private _logger: Logger) {}
+
+  public getSomething = () => {
+    this._logger.log("MyServiceProd running...");
+    return 22;
+  };
+}

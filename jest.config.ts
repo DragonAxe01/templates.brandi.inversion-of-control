@@ -17,6 +17,17 @@ const config: Config.InitialOptions = {
     "^.+\\.ts?$": "ts-jest",
   },
   moduleFileExtensions: ["ts", "tsx", "js"],
+  transformIgnorePatterns: [
+    "node_modules/(?!" +
+      [
+        "node-fetch",
+        "fetch-blob",
+        "data-uri-to-buffer",
+        "jest-runtime",
+        "formdata-polyfill",
+      ].join("|") +
+      ")",
+  ],
 };
 
 export default config;
