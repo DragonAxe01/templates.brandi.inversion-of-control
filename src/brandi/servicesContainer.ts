@@ -23,7 +23,6 @@ injected(MyServiceMock, containerTokens.connString, containerTokens.logger);
 
 export const servicesContainer = new Container();
 
-servicesContainer.bind(containerTokens.connString).toConstant(connString);
 // configs
 servicesContainer.bind(containerTokens.connString).toConstant(connString);
 
