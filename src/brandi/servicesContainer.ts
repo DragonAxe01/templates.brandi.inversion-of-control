@@ -1,4 +1,5 @@
-import { Container, Factory, injected, token } from "brandi";
+import { Container, injected, token } from "brandi";
+import { connString } from "./config";
 import {
   ApiServiceMock,
   IMyService,
@@ -21,6 +22,10 @@ injected(MyServiceMock, containerTokens.connString, containerTokens.logger);
 export class ServicesContainer extends Container {
   constructor() {
     super();
+    // configs
+    this.bind(containerTokens.connString).toConstant(connString);
+
+    // services
     this.bind(containerTokens.apiService)
       .toInstance(ApiServiceMock)
       .inSingletonScope();
@@ -31,19 +36,5 @@ export class ServicesContainer extends Container {
     this.bind(containerTokens.myService)
       .toInstance(MyServiceMock) // the mock implementation will be used
       .inTransientScope();
-    this.bind(containerTokens.connString)
-      .toInstance(() => {
-        return getConnString();
-      })
-      .inSingletonScope();
   }
 }
-
-const getConnString = (): string => {
-  // return "abc";
-  const val = process.env.CONN_STRING_MOCK;
-  if (typeof val === "undefined") {
-    throw "Config value not defined.";
-  }
-  return val;
-};

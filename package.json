@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "module": true,
   "scripts": {
     "compile": "tsc",
     "test": "jest --verbose --coverage"

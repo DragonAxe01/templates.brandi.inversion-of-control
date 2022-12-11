@@ -33,7 +33,9 @@ export interface IMyService {
 }
 
 export class MyServiceMock implements IMyService {
-  constructor(public connString: string, private _logger: Logger) {}
+  constructor(public connString: string, private _logger: Logger) {
+    _logger.log(`Conn string: ${connString}`);
+  }
 
   public getSomething = () => {
     this._logger.log("MyServiceMock running...");
@@ -42,7 +44,9 @@ export class MyServiceMock implements IMyService {
 }
 
 export class MyServiceProd implements IMyService {
-  constructor(public connString: string, private _logger: Logger) {}
+  constructor(public connString: string, private _logger: Logger) {
+    _logger.log(`Conn string: ${connString}`);
+  }
 
   public getSomething = () => {
     this._logger.log("MyServiceProd running...");
