@@ -1,43 +1,46 @@
-import { ApiServiceMock, MyServiceMock, RepoConnectorMock } from "./services";
-import { servicesContainer, containerTokens } from "./servicesContainer";
-import { servicesContainer2 } from "./servicesContainer2";
+import { childContainer } from "./childContainer";
+import { mainContainer, containerTokens } from "./mainContainer";
+import { MyPartialContainer, partialContainerTokens } from "./partialContainer";
+import { ApiService } from "./services/apiService";
+import { MyMultiImplServiceMock } from "./services/multiImplementationsService";
+import { RepoService } from "./services/repoService";
 
 describe("Dependency injection tests", () => {
   it("Makes a simple object", () => {
     // run
-    const serv = servicesContainer.get(containerTokens.apiService);
+    const serv = mainContainer.get(containerTokens.apiService);
     const res = serv.get();
 
     // expect
-    expect(serv).toBeInstanceOf(ApiServiceMock);
+    expect(serv).toBeInstanceOf(ApiService);
     expect(res).toBe("hello from api service");
   });
 
   it("Makes an object with injected dependencies", () => {
     // run
-    const serv = servicesContainer.get(containerTokens.repoConnector);
+    const serv = mainContainer.get(containerTokens.repoConnector);
     const res = serv.getData();
 
     // assert
-    expect(serv).toBeInstanceOf(RepoConnectorMock);
+    expect(serv).toBeInstanceOf(RepoService);
     expect(res).toBe("hello from mock repo");
   });
 
   it("Makes an object from interface", () => {
     // run
-    const serv = servicesContainer.get(containerTokens.myService);
+    const serv = mainContainer.get(containerTokens.myService);
     const res = serv.getSomething();
 
     // assert
-    expect(serv.connString).toBe("abc"); // see .env file
-    expect(serv).toBeInstanceOf(MyServiceMock);
+    expect(serv.connString).toBe("aaa"); // see .env file
+    expect(serv).toBeInstanceOf(MyMultiImplServiceMock);
     expect(res).toBe(11);
   });
 
   it("Has singleton instance accross many containers", () => {
     // prepare
-    const serv1 = servicesContainer.get(containerTokens.counterService);
-    const serv2 = servicesContainer2.get(containerTokens.counterService);
+    const serv1 = mainContainer.get(containerTokens.counterService);
+    const serv2 = childContainer.get(containerTokens.counterService);
 
     // run
     serv1.increment();
@@ -47,6 +50,18 @@ describe("Dependency injection tests", () => {
     // assert
     expect(value1).toBe(1);
     expect(value1).toBe(value2);
+  });
+
+  it("Make an instance using a partial container configuration", () => {
+    // prepare
+    const mockConfig = "__mock__";
+    const cont = new MyPartialContainer(mockConfig);
+
+    // run
+    const serv = cont.get(partialContainerTokens.partialService);
+
+    // assert
+    expect(serv.conf).toBe(mockConfig);
   });
 });
 
