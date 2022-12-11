@@ -4,14 +4,20 @@ This is a template showing how Brandi DI works.
 
 ## Installation
 
-    npm i
+```bash
+npm i
+```
 
 ## Tests
 
-    npm run test
+```bash
+npm run test
+```
 
 ## Usage
 
 Run the app using this command:
 
-    ts-node ./src/main.ts
+```bash
+ts-node ./src/main.ts
+```
