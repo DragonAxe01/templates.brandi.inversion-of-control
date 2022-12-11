@@ -53,3 +53,15 @@ export class MyServiceProd implements IMyService {
     return 22;
   };
 }
+
+export class CounterService {
+  private _val: number = 0;
+
+  public increment = () => {
+    this._val++;
+  };
+
+  public getValue = () => {
+    return this._val;
+  };
+}

@@ -1,13 +1,11 @@
 import { ApiServiceMock, MyServiceMock, RepoConnectorMock } from "./services";
-import { ServicesContainer, containerTokens } from "./servicesContainer";
+import { servicesContainer, containerTokens } from "./servicesContainer";
+import { servicesContainer2 } from "./servicesContainer2";
 
 describe("Dependency injection tests", () => {
   it("Makes a simple object", () => {
-    // prepare
-    const container = new ServicesContainer();
-
     // run
-    const serv = container.get(containerTokens.apiService);
+    const serv = servicesContainer.get(containerTokens.apiService);
     const res = serv.get();
 
     // expect
@@ -16,11 +14,8 @@ describe("Dependency injection tests", () => {
   });
 
   it("Makes an object with injected dependencies", () => {
-    // prepare
-    const container = new ServicesContainer();
-
     // run
-    const serv = container.get(containerTokens.repoConnector);
+    const serv = servicesContainer.get(containerTokens.repoConnector);
     const res = serv.getData();
 
     // assert
@@ -29,17 +24,29 @@ describe("Dependency injection tests", () => {
   });
 
   it("Makes an object from interface", () => {
-    // prepare
-    const container = new ServicesContainer();
-
     // run
-    const serv = container.get(containerTokens.myService);
+    const serv = servicesContainer.get(containerTokens.myService);
     const res = serv.getSomething();
 
     // assert
     expect(serv.connString).toBe("abc"); // see .env file
     expect(serv).toBeInstanceOf(MyServiceMock);
     expect(res).toBe(11);
+  });
+
+  it("Has singleton instance accross many containers", () => {
+    // prepare
+    const serv1 = servicesContainer.get(containerTokens.counterService);
+    const serv2 = servicesContainer2.get(containerTokens.counterService);
+
+    // run
+    serv1.increment();
+    const value1 = serv1.getValue();
+    const value2 = serv2.getValue();
+
+    // assert
+    expect(value1).toBe(1);
+    expect(value1).toBe(value2);
   });
 });
 
