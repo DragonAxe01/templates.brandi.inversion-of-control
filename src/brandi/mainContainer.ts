@@ -1,7 +1,12 @@
-import { Container, injected, token } from "brandi";
+import { AsyncFactory, Container, Factory, injected, token } from "brandi";
 import { connString, partialConf } from "./configs";
 import { MyPartialContainer } from "./partialContainer";
 import { ApiService } from "./services/apiService";
+import {
+  AsyncServ,
+  AsyncServFactory,
+  AsyncServParent,
+} from "./services/asynServ";
 import { CounterService } from "./services/counterService";
 import { Logger } from "./services/logger";
 import {
@@ -16,6 +21,8 @@ export const containerTokens = {
   repoConnector: token<RepoService>("repoConnector"),
   myService: token<IMyMultiImplService>("repoConnector"),
   counterService: token<CounterService>("counterService"),
+  asyncServProm: token<Promise<AsyncServ>>("asyncServ"),
+  AsyncServParentProm: token<Promise<AsyncServParent>>("asyncServParent"),
 };
 
 // we dont want to expose these tokens
@@ -53,6 +60,20 @@ class MainContainer extends Container {
       .inTransientScope();
     this.bind(containerTokens.counterService)
       .toInstance(CounterService)
+      .inSingletonScope();
+    // async
+    this.bind(containerTokens.asyncServProm)
+      .toInstance(async () => {
+        const res = await new AsyncServFactory().getAsyncServ("_");
+        return res;
+      })
+      .inSingletonScope();
+    this.bind(containerTokens.AsyncServParentProm)
+      .toInstance(async () => {
+        const asyncServ = await this.get(containerTokens.asyncServProm);
+        await asyncServ.init();
+        return new AsyncServParent(asyncServ);
+      })
       .inSingletonScope();
   }
 }

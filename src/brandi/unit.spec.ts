@@ -2,6 +2,7 @@ import { childContainer } from "./childContainer";
 import { mainContainer, containerTokens } from "./mainContainer";
 import { MyPartialContainer, partialContainerTokens } from "./partialContainer";
 import { ApiService } from "./services/apiService";
+import { AsyncServParent } from "./services/asynServ";
 import { MyMultiImplServiceMock } from "./services/multiImplementationsService";
 import { RepoService } from "./services/repoService";
 
@@ -62,6 +63,20 @@ describe("Dependency injection tests", () => {
 
     // assert
     expect(serv.conf).toBe(mockConfig);
+  });
+
+  it("Makes an instance of an async service and an async child", (done) => {
+    // run
+    try {
+      mainContainer.get(containerTokens.AsyncServParentProm).then((serv) => {
+        // assert
+        expect(serv).toBeInstanceOf(AsyncServParent);
+        expect(serv.child.initialized).toBeTruthy();
+        done();
+      });
+    } catch (error) {
+      done(error);
+    }
   });
 });
 
