@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@types/dotenv": "^8.2.0",
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "guid-typescript": "^1.0.9"
   }
 }

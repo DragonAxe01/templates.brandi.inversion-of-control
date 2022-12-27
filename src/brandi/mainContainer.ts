@@ -3,10 +3,10 @@ import { connString, partialConf } from "./configs";
 import { MyPartialContainer } from "./partialContainer";
 import { ApiService } from "./services/apiService";
 import {
-  AsyncServ,
+  AsyncClient,
   AsyncServFactory,
-  AsyncServParent,
-} from "./services/asynServ";
+  AsyncRepo,
+} from "./async/services/asynServices";
 import { CounterService } from "./services/counterService";
 import { Logger } from "./services/logger";
 import {
@@ -21,8 +21,8 @@ export const containerTokens = {
   repoConnector: token<RepoService>("repoConnector"),
   myService: token<IMyMultiImplService>("repoConnector"),
   counterService: token<CounterService>("counterService"),
-  asyncServProm: token<Promise<AsyncServ>>("asyncServ"),
-  AsyncServParentProm: token<Promise<AsyncServParent>>("asyncServParent"),
+  asyncServProm: token<Promise<AsyncClient>>("asyncServ"),
+  AsyncServParentProm: token<Promise<AsyncRepo>>("asyncServParent"),
 };
 
 // we dont want to expose these tokens
@@ -72,7 +72,7 @@ class MainContainer extends Container {
       .toInstance(async () => {
         const asyncServ = await this.get(containerTokens.asyncServProm);
         await asyncServ.init();
-        return new AsyncServParent(asyncServ);
+        return new AsyncRepo(asyncServ);
       })
       .inSingletonScope();
   }
